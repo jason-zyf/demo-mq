@@ -10,9 +10,9 @@ import java.util.Properties;
 
 public class ProducerFastStart {
     // Kafka集群地址
-    private static final String brokerList = "192.168.0.102:9092";
+    private static final String brokerList = "localhost:9092";
     // 主题名称-之前已经创建
-    private static final String topic = "pci";
+    private static final String topic = "pci1";
 
     public static void main(String[] args) {
 
@@ -35,12 +35,11 @@ public class ProducerFastStart {
         ProducerRecord<String, String> record = new ProducerRecord<>(topic, "Kafka-demo-001", "hello, Kafka!");
         try {
             producer.send(record);
-            RecordMetadata recordMetadata = producer.send(record).get();
-            System.out.println("part:" + recordMetadata.partition() + ";topic:" + recordMetadata.topic());
+            //RecordMetadata recordMetadata = producer.send(record).get();
+            //System.out.println("part:" + recordMetadata.partition() + ";topic:" + recordMetadata.topic());
         } catch (Exception e) {
             e.printStackTrace();
         }
         producer.close();
     }
-
 }

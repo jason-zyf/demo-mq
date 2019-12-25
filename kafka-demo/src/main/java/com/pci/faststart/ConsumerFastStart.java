@@ -13,7 +13,7 @@ import java.util.Properties;
 public class ConsumerFastStart {
 
     // Kafka集群地址
-    private static final String brokerList = "192.168.0.102:9092";
+    private static final String brokerList = "172.23.126.41:9092";
     // 主题名称-之前已经创建
     private static final String topic = "pci";
     // 消费组

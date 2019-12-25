@@ -16,7 +16,7 @@ public class SyncProducer {
         // 1、创建消息生产者producer，并制定生产者组名
         DefaultMQProducer producer = new DefaultMQProducer("group1");
         //2、设置nameserver地址
-        producer.setNamesrvAddr("172.23.126.41:9876;172.23.122.206:9876");
+        producer.setNamesrvAddr("172.23.124.218:9876;172.23.127.76:9876");
         // 3、启动producer
         producer.start();
 

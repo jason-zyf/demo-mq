@@ -17,7 +17,7 @@ public class Consumer {
         // 1、创建消费者，并指定消费组
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("group1");
         // 2、消费者指定nameserver
-        consumer.setNamesrvAddr("172.23.124.218:9876;172.23.127.76:9876");
+        consumer.setNamesrvAddr("192.168.236.135:9876;192.168.236.134:9876");
         /**
          * 3、订阅主题和tag
          * tag类型含义
@@ -25,12 +25,14 @@ public class Consumer {
          * Tag1||Tag2  消费Tag1和Tag2
          * *   消费此topic下的所有 Tag
          */
-        consumer.subscribe("base", "Tag1");
+        consumer.subscribe("*", "Tag");
+//        consumer.subscribe("NoTag", "*");
         // 4、设置回调函数，处理消息
         consumer.registerMessageListener(new MessageListenerConcurrently() {
             public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
                 for (MessageExt msg : msgs) {
-                    System.out.println("接受到消息："+new String(msg.getBody()));
+                    System.out.println("接受到消息："+new String(msg.getBody())+",bornHost:"+msg.getBornHost()+",msgId:"
+                     +msg.getMsgId()+",queueId:"+msg.getQueueId()+",queueOffset:"+msg.getQueueOffset()+",CommitLogOffset:"+msg.getCommitLogOffset());
                 }
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }

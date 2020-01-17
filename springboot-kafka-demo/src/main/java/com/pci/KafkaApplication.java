@@ -7,7 +7,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,15 +42,18 @@ public class KafkaApplication {
     /**
      * 消息接收
      */
-    @KafkaListener(id="myContainer",topics = topic,groupId = "group.demo")
-    public void listener(String input){
-        log.info("message input value:{}",input);
+    @KafkaListener(id = "fd",topics = topic,groupId = "group1")
+    public void listenter(String input){
+        System.out.println(input);
+        log.info("接受消息：{}",input);
     }
+
+
 
     /**
      * 事务方式发送一
      */
-    @GetMapping("/transationSend/{input}")
+    /*@GetMapping("/transationSend/{input}")
     public String transSendToKafa(@PathVariable String input){
         this.kafkaTemplate.send(topic,input);
 
@@ -65,13 +67,13 @@ public class KafkaApplication {
             return true;
         });
         return "send success!,"+input;
-    }
+    }*/
 
 
     /**
      * 事务方式发送二
      */
-    @GetMapping("/transSend/{input}")
+    /*@GetMapping("/transSend/{input}")
     @Transactional(rollbackFor = RuntimeException.class)
     public String transSend(@PathVariable String input){
 
@@ -83,8 +85,7 @@ public class KafkaApplication {
         kafkaTemplate.send(topic, input + " anthor");
 
         return "send success!,"+input;
-    }
-
+    }*/
 
 
 }

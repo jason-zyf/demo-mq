@@ -19,8 +19,7 @@ public class ProducerTest {
 
     @Test
     public void testSendMessage(){
-
-        rocketMQTemplate.convertAndSend("springboot-mq", "hello springboot-rocketmq");
+        rocketMQTemplate.convertAndSend("springboot-mq", "hello pciasd");
         log.info("消息发送成功");
     }
 

@@ -1,5 +1,6 @@
 package com.pci;
 
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +8,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.concurrent.ExecutionException;
 
 @SpringBootApplication
 @RestController
@@ -34,8 +38,12 @@ public class KafkaApplication {
      * 消息生产者
      */
     @GetMapping("/send/{input}")
-    public String sendToKafka(@PathVariable String input){
-        this.kafkaTemplate.send(topic,input);
+    public String sendToKafka(@PathVariable String input) throws ExecutionException, InterruptedException {
+        ListenableFuture send = this.kafkaTemplate.send(topic, input);
+        Object o = send.get();
+        System.out.println("send:"+send);
+        System.out.println("sendGet:"+o);
+
         return "send success!,"+input;
     }
 

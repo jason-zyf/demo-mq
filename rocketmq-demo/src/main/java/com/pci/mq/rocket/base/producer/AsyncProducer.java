@@ -18,14 +18,15 @@ public class AsyncProducer {
         // 1、创建消息生产者producer，并制定生产者组名
         DefaultMQProducer producer = new DefaultMQProducer("group1");
         //2、设置nameserver地址
-        producer.setNamesrvAddr("192.168.236.132:9876");
+        producer.setNamesrvAddr("10.38.2.12:31076");
+//        producer.setVipChannelEnabled(false);
         // 3、启动producer
         producer.start();
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             //4、创建消息对象，指定主题topic、tag和消息体
-            Message msg = new Message("asyc",
-                    "Tag",
+            Message msg = new Message("netCommandSend",
+                    "VMlLacQTRg7n",
                     ("hello rocket_"+i).getBytes());
 
             //5、发送异步消息,返回结果

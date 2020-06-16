@@ -20,6 +20,7 @@
         <module>springboot-kafka-demo</module>
         <module>springboot-rocketmq-consumer</module>
         <module>springboot-rocketmq-producer</module>
+        <module>springboot-redis</module>
     </modules>
 
     <parent>

@@ -16,7 +16,7 @@ public class Consumer {
 
     public static void main(String[] args) throws Exception {
         // 1、创建消费者，并指定消费组
-        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("group9334");
+        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("group12");
 
         // 2、消费者指定nameserver
         consumer.setNamesrvAddr("10.38.2.12:30076");
@@ -38,8 +38,8 @@ public class Consumer {
          * *   消费此topic下的所有 Tag
          * 如果需要订阅多个主题，继续在后面多写几个 consumer.subscribe(topic, "*"); 即可
          */
-//        consumer.subscribe("pci", "*");
-        consumer.subscribe("netCommandSend", "N33");
+        consumer.subscribe("netCommandSend", "N33");  // c#订阅
+//        consumer.subscribe("webim-s2c", "*");   // h5订阅
 //        consumer.subscribe("pci-hj", "*");
 
 //        consumer.unsubscribe("pci");   // 取消订阅
@@ -48,7 +48,9 @@ public class Consumer {
             public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
                 for (MessageExt msg : msgs) {
                     String str = new String(msg.getBody());
-                        System.out.println("c#:"+str);
+
+                    System.out.println("c#:"+str);
+
 //                    System.out.println("接受到消息："+new String(msg.getBody())+",bornHost:"+msg.getBornHost()+",msgId:"
 //                     +msg.getMsgId()+",queueId:"+msg.getQueueId()+",queueOffset:"+msg.getQueueOffset()+",CommitLogOffset:"+msg.getCommitLogOffset());
                 }

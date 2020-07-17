@@ -1,14 +1,15 @@
 package com.migrate.redis.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 /**
  * @author zyting
@@ -60,6 +61,67 @@ public class RedisController {
         return "成功插入："+keys.size();
     }
 
+    @GetMapping("/insertPointData")
+    public String insertPointData(){
+
+        File file = new File("C:\\Users\\jason\\Desktop\\三维用到的点位.txt");//文件路径
+        FileReader fileReader = null;
+        try {
+            fileReader = new FileReader(file);
+
+            LineNumberReader reader = new LineNumberReader(fileReader);
+            String txt = "";
+            while (txt != null) {
+                txt = reader.readLine();
+                int value = RandomUtils.nextInt(0,2);
+                if(txt.endsWith("Temperatur")){
+                    value = RandomUtils.nextInt(20,40);
+                }else if(txt.endsWith("Humidity")){
+                    value = RandomUtils.nextInt(10,40);
+                }
+                Map<String,Object> map = new HashMap<>();
+                map.put("Point", txt+".Value");
+                map.put("Quality", 192);
+                map.put("Timestamp", System.currentTimeMillis()+"");
+                map.put("Value", value+"");
+
+                Object o = JSONObject.toJSON(map);
+                redisJsonTemplate.opsForValue().set(txt+".Value", o);
+            }
+            reader.close();
+            fileReader.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "插入成功";
+    }
+
+    public static void main(String[] args) {
+        long timeStart = System.currentTimeMillis();
+        File file = new File("C:\\Users\\jason\\Desktop\\三维用到的点位.txt");//文件路径
+        FileReader fileReader = null;
+        try {
+            fileReader = new FileReader(file);
+
+            LineNumberReader reader = new LineNumberReader(fileReader);
+            String txt = "";
+            while (txt != null) {
+                txt = reader.readLine();
+                System.out.println( txt + "\n");
+                long timeEnd = System.currentTimeMillis();
+                System.out.println("总共花费：" + (timeEnd - timeStart) + "ms");
+            }
+            reader.close();
+            fileReader.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }

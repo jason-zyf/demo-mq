@@ -1,2 +1,14 @@
 server:
   port: 9099
+
+spring:
+  application:
+    name: springboot-redis
+  datasource:
+    dbName: netcommand
+    dbAddr: hjmos-mysql-frame
+    dbPort: 3306
+    username: netcommand
+    password: 123456
+    url: jdbc:mysql://10.38.2.12:30006/netcommand?characterEncoding=utf-8&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver

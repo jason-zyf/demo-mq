@@ -6,17 +6,19 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.TopicPartition;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Properties;
 
 public class ConsumerFastStart {
 
     // 10.36.10.2:9092;10.36.10.3:9092;10.36.10.4:9092
-    private static final String brokerList = "10.36.10.2:9092;10.36.10.3:9092;10.36.10.4:9092";
+    private static final String brokerList = "172.23.125.15:9092";
     // 主题名称-之前已经创建
-    private static final String topic = "lilt_test";
+    private static final String topic = "log";
     // 消费组
-    private static final String groupId = "userGroup";
+    private static final String groupId = "testlog";
 
     public static void main(String[] args) {
 
@@ -26,17 +28,20 @@ public class ConsumerFastStart {
         props.put("bootstrap.servers", brokerList);
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        props.put("group.id", "user1");     // group.id 必须是已创建的消费者组，否则接受不到消息
+        props.put("group.id", groupId);     // group.id 必须是已创建的消费者组，否则接受不到消息
 
         // 可选设置属性
         props.put("enable.auto.commit", "true");
         // 自动提交offset,每1s提交一次
         props.put("auto.commit.interval.ms", "1000");
-        props.put("auto.offset.reset","earliest ");
-        props.put("client.id", groupId);
+        props.put("auto.offset.reset","earliest");
+//        props.put("client.id", "user1");
 
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
-        consumer.subscribe(Collections.singletonList(topic));
+        Collection<String> topicList = new ArrayList<>();
+        topicList.add(topic);
+        consumer.subscribe(topicList);
+//        consumer.subscribe(Collections.singletonList(topic));
 
         // 获取所有的主题信息
         /*Map<String, List<PartitionInfo>> stringListMap = consumer.listTopics();
@@ -47,7 +52,7 @@ public class ConsumerFastStart {
         // 设置从topicPartition中的指定 offset 开始消费消息
         ConsumerRecords<String, String> recordTemp = consumer.poll(0);
 //        System.out.println(recordTemp.isEmpty());
-        consumer.seek(new TopicPartition("lilt_test", 0), 31);
+//        consumer.seek(new TopicPartition("lilt_test", 0), 31);
 
 
         try {

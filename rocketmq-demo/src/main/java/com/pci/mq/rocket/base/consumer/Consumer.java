@@ -8,6 +8,7 @@ import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 消息接受者
@@ -16,7 +17,7 @@ public class Consumer {
 
     public static void main(String[] args) throws Exception {
         // 1、创建消费者，并指定消费组
-        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("group12");
+        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("userGroup");
 
         // 2、消费者指定nameserver
         consumer.setNamesrvAddr("10.38.2.12:30076");
@@ -38,9 +39,12 @@ public class Consumer {
          * *   消费此topic下的所有 Tag
          * 如果需要订阅多个主题，继续在后面多写几个 consumer.subscribe(topic, "*"); 即可
          */
-        consumer.subscribe("netCommandSend", "N33");  // c#订阅
+//        consumer.subscribe("netCommandSend", "N32");  // c#订阅
 //        consumer.subscribe("webim-s2c", "*");   // h5订阅
-//        consumer.subscribe("pci-hj", "*");
+        consumer.subscribe("pci", "*");
+//        consumer.subscribe("BB", "*");
+
+//        TimeUnit.SECONDS.sleep(5);
 
 //        consumer.unsubscribe("pci");   // 取消订阅
         // 4、设置回调函数，处理消息
@@ -48,7 +52,6 @@ public class Consumer {
             public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
                 for (MessageExt msg : msgs) {
                     String str = new String(msg.getBody());
-
                     System.out.println("c#:"+str);
 
 //                    System.out.println("接受到消息："+new String(msg.getBody())+",bornHost:"+msg.getBornHost()+",msgId:"

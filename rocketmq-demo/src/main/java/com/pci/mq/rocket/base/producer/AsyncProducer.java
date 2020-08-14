@@ -18,16 +18,16 @@ public class AsyncProducer {
         // 1、创建消息生产者producer，并制定生产者组名
         DefaultMQProducer producer = new DefaultMQProducer("group1");
         //2、设置nameserver地址
-        producer.setNamesrvAddr("10.38.2.12:31076");
+        producer.setNamesrvAddr("10.38.2.12:30076");
 //        producer.setVipChannelEnabled(false);
         // 3、启动producer
         producer.start();
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1; i++) {
+            System.out.println("异步发送时间："+System.currentTimeMillis());
             //4、创建消息对象，指定主题topic、tag和消息体
-            Message msg = new Message("netCommandSend",
-                    "VMlLacQTRg7n",
-                    ("hello rocket_"+i).getBytes());
+            Message msg = new Message("AA",
+                    ("hello rocket_BB"+i).getBytes());
 
             //5、发送异步消息,返回结果
             producer.send(msg, new SendCallback() {
@@ -39,8 +39,21 @@ public class AsyncProducer {
                 }
             });
 
+            //4、创建消息对象，指定主题topic、tag和消息体
+//            Message msg1 = new Message("AA",
+//                    ("hello rocket_AA"+i).getBytes());
+//
+//            //5、发送异步消息,返回结果
+//            producer.send(msg1, new SendCallback() {
+//                public void onSuccess(SendResult sendResult) {
+//                    System.out.println("发送成功："+sendResult);
+//                }
+//                public void onException(Throwable e) {
+//                    System.out.println("发送异常："+e);
+//                }
+//            });
             //线程睡眠1秒
-            TimeUnit.SECONDS.sleep(1);
+//            TimeUnit.SECONDS.sleep(1);
         }
         // 6、关闭producer
         producer.shutdown();

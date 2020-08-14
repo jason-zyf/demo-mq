@@ -34,28 +34,30 @@ public class SyncProducer {
         System.out.println("通过topic和msgId查询："+ext1.toString());*/
 
 //        TopicList allTopics =  mqAdminExt.fetchAllTopicList();
-        List<MessageQueue> pci = producer.fetchPublishMessageQueues("pci");
+//        List<MessageQueue> pci = producer.fetchPublishMessageQueues("pci");
 //        System.out.println(pci.toString());
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 1; i++) {
+            System.out.println("发送时间："+System.currentTimeMillis());
             //4、创建消息对象，指定主题topic、tag和消息体
-            Message msg = new Message("pci",
-                    ("hello rocket_"+i).getBytes());
+            Message msg = new Message("AAC",
+                    ("hello rocket_AAC_"+i).getBytes());
 
 //            Message msg1 = new Message("NoTag", "hah".getBytes());
             // 构造一个消息队列
-//            MessageQueue queue = new MessageQueue("testMsgID", "broker-b", 3);
+//            MessageQueue queue = new MessageQueue("BB", "broker-a", 3);
 
             //5、发送同步消息,返回结果
             SendResult result = producer.send(msg);
-            // 消息发送状态
-            SendStatus status = result.getSendStatus();
-            // 消息ID
-            String msgId = result.getMsgId();
-            // 消息接收队列ID
-            int queueId = result.getMessageQueue().getQueueId();
 
-            System.out.println("发送结果："+result);
+//            // 消息发送状态
+//            SendStatus status = result.getSendStatus();
+//            // 消息ID
+//            String msgId = result.getMsgId();
+//            // 消息接收队列ID
+//            int queueId = result.getMessageQueue().getQueueId();
+//
+//            System.out.println("发送结果："+result);
 //            System.out.println("status:"+status+",messageQueue:"+result.getMessageQueue());
 
             //线程睡眠1秒

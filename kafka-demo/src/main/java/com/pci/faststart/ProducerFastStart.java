@@ -11,9 +11,9 @@ import java.util.concurrent.Future;
 
 public class ProducerFastStart {
     // Kafka集群地址 10.36.10.2:9092;10.36.10.3:9092;10.36.10.4:9092
-    private static final String brokerList = "10.36.10.2:9092;10.36.10.3:9092;10.36.10.4:9092";
+    private static final String brokerList = "172.23.125.15:9092";
     // 主题名称-之前已经创建
-    private static final String topic = "lilt_test";
+    private static final String topic = "logtest";
 
     public static void main(String[] args) {
 
@@ -35,7 +35,7 @@ public class ProducerFastStart {
         KafkaProducer<String, String> producer = new KafkaProducer<>(properties);
 
         try {
-            for(int i= 0; i < 6; i++){
+            for(int i= 0; i < 2; i++){
                 ProducerRecord<String, String> record = new ProducerRecord<>(topic, "测试一下_"+i);
 //            producer.send(record);   // 单向
                 RecordMetadata recordMetadata = producer.send(record).get();

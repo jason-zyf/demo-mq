@@ -11,55 +11,63 @@ import java.util.List;
 /**
  * @author zyting
  * @sinne 2020-09-06
+ * 复制文件，并分类合并在一起
  */
-public class RenameMergeFileUtils {
+public class CopyMergeFileUtils {
 
     public static int x = 1;
     public static int y = 1;
 
     public static void main(String[] args) {
         // 调用重命名并将同类的文件合并到一起的方法
-        renameMergeFile("E:\\ganpicture");
-        System.out.println("文件重命名并同类合并到一个文件夹成功");
+        String path = "E:\\ganpicture";
+        copyMergeFile(path);
+        System.out.println("文件复制并同类合并到一个文件夹成功");
     }
 
     /**
-     * 重命名并将同类的文件合并到一起
+     * 复制并将同类的文件合并到一起
      * @param path
      */
-    private static void renameMergeFile(String path) {
+    private static void copyMergeFile(String path) {
 
         // 要合并到哪个文件夹的地址
         String mergeDir = "E:\\merge";
-
         File file = new File(path);
         File[] tempList = file.listFiles();
 
         //对文件名进行排序
         List<File> list = Arrays.asList(tempList);
+        // 根据名称进行排序
         list = sortFileByName(list);
 
         for (int i = 0; i < list.size(); i++){
             File file1 = list.get(i);
             if(file1.isDirectory()){
-                renameMergeFile(file1.getAbsolutePath());
+                // 如果是文件夹则递归调用复制合并方法
+                copyMergeFile(file1.getAbsolutePath());
                 continue;
             }
-
-            String oldPath = list.get(i).getAbsolutePath();
-            String oldName = list.get(i).getName();
-            String newName = oldName.substring(oldName.lastIndexOf("."));
+            // 获取文件的绝对路径
+            String oldPath = file1.getAbsolutePath();
+            // 获取文件的名称
+            String oldName = file1.getName();
+            // 获取文件的后缀名
+            String extName = oldName.substring(oldName.lastIndexOf("."));
 
             String newPath = "" ;
-            if(list.get(i).getParent().endsWith("-0")){
-                newPath = mergeDir+"\\Y"+y+newName;
+            if(file1.getParent().endsWith("-0")){
+                // 拼接要合并后的文件的绝对路径
+                newPath = mergeDir+"\\Y"+y+extName;
                 y = y + 1;
-            }else if(list.get(i).getParent().endsWith("-25")){
-                newPath = mergeDir+"\\X"+x+newName;
+            }else if(file1.getParent().endsWith("-25")){
+                // 拼接要合并后的文件的绝对路径
+                newPath = mergeDir+"\\X"+x+extName;
                 x = x+1;
             }
             // 如果新文件的地址不为空则调用复制文件的方法
             if(!StringUtils.isEmpty(newPath)){
+                // 调用复制方法进行复制
                 copyFile(oldPath,newPath);
             }
         }

@@ -1,6 +1,13 @@
 package com.pci.mq.rocket.utils;
 
+import jxl.Workbook;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
+
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
@@ -8,6 +15,7 @@ import java.util.*;
  * @sinne 2020-09-09
  * 重命名文件夹   gan1-0,gan1-25
  * 用于中间有些文件夹被删除后，需要从1开始重新命名文件夹
+ * 注意：没有递归调用
  */
 public class RenameDirUtils {
 
@@ -32,24 +40,54 @@ public class RenameDirUtils {
             return;
         }
 
-        // 循环map里面的值进行重命名
-        for(Map.Entry<String, List<File>> entry : fileMap.entrySet()){
-            String key = entry.getKey();
-            List<File> fileList = entry.getValue();
-            // 对文件夹根据名称进行排序
-            fileList = sortDirByName(fileList);
-            // 对个文件夹进行重命名
-            renameDir(key,fileList);
+        // 将重命名前面的文件夹名字记录到excel中
+        WritableWorkbook workbook = null;
+        try {
+            File excelFile = new File("C:\\Users\\jason\\Desktop\\workbook.xls");
+            excelFile.canRead();
+            // 创建工作薄
+            workbook = Workbook.createWorkbook(excelFile);
+            // 创建sheet页面
+            WritableSheet sheet = workbook.createSheet("sheet1", 0);
+            //创建要显示的内容,创建一个单元格，第一个参数为列坐标，第二个参数为行坐标，第三个参数为内容
+            Label before = new Label(0,0,"前");
+            sheet.addCell(before);
+            Label later = new Label(1,0,"后");
+            sheet.addCell(later);
+
+            // 循环map里面的值进行重命名
+            for(Map.Entry<String, List<File>> entry : fileMap.entrySet()){
+                String key = entry.getKey();
+                List<File> fileList = entry.getValue();
+                // 对文件夹根据名称进行排序
+                fileList = sortDirByName(fileList);
+                // 对个文件夹进行重命名
+                renameDir(key,fileList,sheet);
+            }
+            workbook.write();//写入数据
+            System.out.println("文件夹重命名成功");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            if(workbook != null){
+                try {
+                    workbook.close(); //关闭流
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        System.out.println("文件夹重命名成功");
     }
 
     /**
      * 重命名文件夹
      * @param key 代表是0 还是25
      * @param list 表示-0的所有文件夹集合
+     * @param sheet
      */
-    private static void renameDir(String key, List<File> list) {
+    private static void renameDir(String key, List<File> list, WritableSheet sheet) throws WriteException {
         // 重命名文件夹开始位置，如果从0开始则将 a=1 改成 a=0
         int a = 1;
         for (int i = 0; i < list.size(); i++){
@@ -61,6 +99,13 @@ public class RenameDirUtils {
                 String oldPath = file1.getAbsolutePath();
                 // 拼接重命名文件夹的绝对路径，如 E:\ganpicture\gan1-25
                 String newPath = file1.getParent()+"\\gan"+a+"-"+key ;
+
+                // 将重命名前后的文件名写入到excel表中
+                Label before = new Label(0, a, file1.getName());
+                sheet.addCell(before);
+                Label later = new Label(1, a,"gan"+a+"-"+key);
+                sheet.addCell(later);
+
                 // 将文件绝对路径转换成文件对象
                 File oldFile = new File(oldPath);
                 File newFile = new File(newPath);

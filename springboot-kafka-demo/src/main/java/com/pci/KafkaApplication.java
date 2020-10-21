@@ -1,6 +1,5 @@
 package com.pci;
 
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +93,14 @@ public class KafkaApplication {
 
         return "send success!,"+input;
     }*/
+    @GetMapping("/sendMax")
+    public String sendMax() throws ExecutionException, InterruptedException {
+        String testfile = FileUtil.fileToBase64("C:\\Users\\jason\\Desktop\\testfile");
+        ListenableFuture send = this.kafkaTemplate.send(topic, testfile);
+        Object o = send.get();
+        System.out.println("send:"+send);
 
+        return "sendMax success!";
+    }
 
 }
